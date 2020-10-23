@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 't2g0j!_3l#a2&#=e0nkt%qo=8xyiz#y#fj=8#*+h5vs_i8#%xx'
+SECRET_KEY = '+9*^)o5!a8ga2ysrs-myw_mx%&*ir=n5kmbn6y81pi!#@tu2_u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'rest_framework',
+    'rest_framework.authtoken',
     'dj_rest_auth',
     'allauth',
     'allauth.account',
     'dj_rest_auth.registration',
-    'rest_framework',
     'api'
 ]
 
@@ -81,8 +83,12 @@ WSGI_APPLICATION = 'elibrary.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'elibrary',
+        'USER' : 'postgres',
+        'PASSWORD' : 'koij890hgf',
+        'HOST' : '127.0.0.1',
+        'PORT' : '5432',
     }
 }
 
@@ -124,3 +130,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'api.User'
+
+ACCOUNT_ADAPTER = 'api.adapters.CustomUserAccountAdapter'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
+}

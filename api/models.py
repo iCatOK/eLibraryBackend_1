@@ -1,35 +1,50 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from .managers import UserManager
 
+# Create your models here.
 
 class Branch(models.Model):
     name = models.CharField(max_length=60, blank=True)
     address = models.TextField(max_length=500, blank=True)
 
-class Profile(models.Model):
+class User(AbstractBaseUser, PermissionsMixin):
+
     class ReaderStatus(models.TextChoices):
         NOBOOK = 'NB', _('Без книги')
         BORROWED = 'BR', _('Пользуется книгу')
         DEBTOR = 'DB', _('Должник')
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_librarian = models.BooleanField(default=False)
-    full_name = models.CharField(max_length=100, blank=False)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True)
     status = models.CharField(
         max_length=2, choices=ReaderStatus.choices, 
         default=ReaderStatus.NOBOOK 
     )
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+    username = models.CharField(max_length=30, unique=True)
+    full_name = models.CharField(max_length=200)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
 
+    is_staff = models.BooleanField(default=False)
+    is_librarian = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+    def __str__(self):
+        return self.username
+
+    def get_short_name(self):
+        return self.username
+
+    def get_full_name(self):
+        return self.full_name

@@ -1,25 +1,17 @@
+from allauth.account import app_settings as allauth_settings
+from allauth.account.adapter import get_adapter
+from allauth.account.utils import setup_user_email
+from allauth.utils import email_address_exists
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from django.db import models
-from .models import Profile
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('full_name', 'branch', 'status',)
-
-class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(required=True)
-    class Meta:
-        model = User
-        fields = ('username', 'profile',)
-
-"""
-class RegistrationSerializer(models.ModelSerializer):
+class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, write_only=True)
-    surname = serializers.CharField(required=True, write_only=True)
+    full_name = serializers.CharField(required=True, write_only=True)
     password1 = serializers.CharField(required=True, write_only=True)
     password2 = serializers.CharField(required=True, write_only=True)
+
+    def validate_password1(self, password):
+        return get_adapter().clean_password(password)
 
     def validate(self, data):
         if data['password1'] != data['password2']:
@@ -29,10 +21,9 @@ class RegistrationSerializer(models.ModelSerializer):
 
     def get_cleaned_data(self):
         return {
-            'name': self.validated_data.get('name', ''),
-            'surname': self.validated_data.get('surname', ''),
+            'full_name': self.validated_data.get('full_name', ''),
             'password1': self.validated_data.get('password1', ''),
-            'email': self.validated_data.get('email', ''),
+            'username': self.validated_data.get('username', ''),
         }
 
     def save(self, request):
@@ -44,4 +35,3 @@ class RegistrationSerializer(models.ModelSerializer):
 
         user.save()
         return user
-"""

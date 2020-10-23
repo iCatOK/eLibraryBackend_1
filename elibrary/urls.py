@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib import admin
+from django.urls import path
+from rest_framework import routers
+from django.conf.urls import url, include
+from django.views.generic import TemplateView
+
+auth_url_patterns = [
+    path('', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include(auth_url_patterns)),
 ]
