@@ -10,12 +10,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'username', 'full_name', 'status',
+            'id', 'username', 'full_name', 'status',
             'branch'
         ]
         extra_kwargs = {
             'status': {'read_only': True},
             'username': {'read_only': True},
+            'id': {'read_only': True},
         }
     
     def update(self, instance, validated_data):
@@ -86,11 +87,12 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = [
-            'author', 'name', 'genre', 'owner'
+            'id', 'author', 'name', 'genre', 'owner'
         ]
 
         extra_kwargs = {
             'genre': {'read_only': True},
+            'id': {'read_only': True},
         }
 
     def create(self, validated_data):
@@ -101,8 +103,11 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = [
-            'name',
+            'id', 'name',
         ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
 
     def create(self, validated_data):
         return Genre.objects.create(**validated_data)
@@ -112,8 +117,11 @@ class BranchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Branch
         fields = [
-            'name', 'address'
+            'id', 'name', 'address'
         ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
 
     def create(self, validated_data):
         return Branch.objects.create(**validated_data)
