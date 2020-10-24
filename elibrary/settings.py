@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -22,10 +25,13 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+9*^)o5!a8ga2ysrs-myw_mx%&*ir=n5kmbn6y81pi!#@tu2_u'
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -47,6 +53,8 @@ INSTALLED_APPS = [
     'api'
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +66,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'elibrary.urls'
+
+
+
 
 TEMPLATES = [
     {
@@ -76,7 +87,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'elibrary.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -112,6 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -125,6 +136,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_ID = 1
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -136,7 +149,9 @@ AUTH_USER_MODEL = 'api.User'
 ACCOUNT_ADAPTER = 'api.adapters.CustomUserAccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
+EMAIL_REQUIRED = False
 
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
 }
+

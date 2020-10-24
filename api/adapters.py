@@ -1,4 +1,5 @@
 from allauth.account.adapter import DefaultAccountAdapter
+from api.models import Branch
 
 
 class CustomUserAccountAdapter(DefaultAccountAdapter):
@@ -13,6 +14,12 @@ class CustomUserAccountAdapter(DefaultAccountAdapter):
 
         user.full_name = request.data.get('full_name', '')
         user.username = request.data.get('username', '')
+        branch_id = request.data.get('branch', '')
+        if branch_id:
+            branches = Branch.objects.filter(id=branch_id)
+            if len(branches) == 0:
+                return None
+            user.branch = branches[0]
         user.save()
         return user
     
