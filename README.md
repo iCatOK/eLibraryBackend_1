@@ -12,7 +12,7 @@
   "password2": "password123"
 }
 ```
-+ /auth/user/ (GET, PUT) - профиль пользователя. Body:
++ /auth/user/ (GET, PUT) - профиль пользователя. Изменяемые:  full_name, branch. Body:
 ```
 {
     "id": 2,
