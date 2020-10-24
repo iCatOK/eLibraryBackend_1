@@ -1,3 +1,6 @@
+from django.urls import path
+from .views import BookView
+
 import api.views as views
 from django.urls import path, include
 
@@ -10,4 +13,5 @@ user_patterns = [
 
 urlpatterns = [
     path('users/', include(user_patterns)),
+    path('books/', BookView.as_view()),
 ]

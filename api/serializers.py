@@ -26,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, write_only=True)
     full_name = serializers.CharField(required=True, write_only=True)
@@ -76,4 +77,13 @@ class RegisterSerializer(serializers.Serializer):
                 raise serializers.ValidationError({"error":"Branch does not exisit"})
             user.save()
             return user
-        
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ("author",
+                  "name")
+
+    def create(self, validated_data):
+        return Book.objects.create(**validated_data)

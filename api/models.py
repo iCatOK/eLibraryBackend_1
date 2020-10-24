@@ -4,11 +4,12 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 
-# Create your models here.
 
+# Create your models here.
 class Branch(models.Model):
     name = models.CharField(max_length=60, blank=True)
     address = models.TextField(max_length=500, blank=True)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -48,3 +49,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.full_name
+
+
+class Book(models.Model):
+    author = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
+    branch_id = models.ForeignKey
+    owner_id = models.ForeignKey
+    gener = models.ForeignKey
