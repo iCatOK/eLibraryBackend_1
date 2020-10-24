@@ -4,6 +4,27 @@ from allauth.account.utils import setup_user_email
 from allauth.utils import email_address_exists
 from rest_framework import serializers
 from api.models import User, Branch
+from api.db_utils import get_branch
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'username', 'full_name', 'status',
+            'branch'
+        ]
+        extra_kwargs = {
+            'status': {'read_only': True},
+            'username': {'read_only': True},
+        }
+    
+    def update(self, instance, validated_data):
+        instance.full_name = validated_data.get('full_name', instance.full_name)
+        branch = validated_data.get('branch', instance.branch)
+        if branch:
+            instance.branch = branch
+        instance.save()
+        return instance
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, write_only=True)
