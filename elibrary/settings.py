@@ -70,10 +70,10 @@ ROOT_URLCONF = 'elibrary.urls'
 CORS_ORIGIN_ALLOW_ALL = True # If this is used then CORS_ORIGIN_WHITELIST will not have any effect
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8000/',
+    'http://localhost:8000',
 ] # If this is used, then not need to use CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:8000/',
+    'http://localhost:8000',
 ]
 
 
@@ -162,3 +162,6 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
 }
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'api.serializers.UserSerializer'
+}

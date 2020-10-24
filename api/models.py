@@ -67,3 +67,38 @@ class Book(models.Model):
     branch = models.ForeignKey(Branch, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, null=True, on_delete=models.CASCADE)
+    is_free = models.BooleanField(default=True)
+
+
+class Order(models.Model):
+    
+    class OrderStatus(models.TextChoices):
+        INQUEUE = 'В очереди'
+        ACCEPTED = 'Принята'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=15, choices=OrderStatus.choices, 
+        default=OrderStatus.INQUEUE 
+    )
+    date = models.DateTimeField(auto_now=True)
+
+
+class BookTransaction(models.Model):
+
+    class TransactionStatus(models.TextChoices):
+        INUSE = 'В пользовании'
+        RETURNED = 'Сдана'
+        DEBT = 'Долг'
+
+    borrow_date = models.DateTimeField(auto_now=True)
+    return_date = models.DateTimeField(auto_now=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    cooperator = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=15, choices=TransactionStatus.choices, 
+        default=TransactionStatus.INUSE 
+    )
+    
+

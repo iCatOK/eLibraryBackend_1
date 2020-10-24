@@ -3,14 +3,14 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.utils import email_address_exists
 from rest_framework import serializers
-from api.models import User, Branch, Book, Genre
+from api.models import User, Branch, Book, Genre, BookTransaction
 from api.db_utils import get_branch
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'full_name', 'status',
+            'id', 'username', 'is_librarian', 'full_name', 'status',
             'branch'
         ]
         extra_kwargs = {
@@ -125,3 +125,16 @@ class BranchSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Branch.objects.create(**validated_data)
+
+
+class BookTransactionSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = BookTransaction
+        fields = [
+            "id",
+            "borrow_date",
+            "return_date",
+            "book",
+            "cooperator",
+            "status"
+        ]
