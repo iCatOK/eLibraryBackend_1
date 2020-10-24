@@ -29,5 +29,5 @@ auth_url_patterns = [
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include(auth_url_patterns)),
-    path('books/', include())
+    path('api/', include('api.urls', namespace='api')),
 ]

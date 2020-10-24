@@ -38,7 +38,16 @@ class IsLibrarianOrNothing(permissions.BasePermission):
     Custom permission to only allow owners of an object to edit it.
     """
 
+    message = "Only librarian have permission to see user info."
+
+    def has_permission(self, request, view):
+        return request.user.is_librarian
+
     def has_object_permission(self, request, view, obj):
+        
+        if request.method in permissions.SAFE_METHODS:
+            return request.user.is_librarian
+        
         return request.user.is_librarian
 
 
