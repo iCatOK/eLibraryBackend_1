@@ -10,6 +10,9 @@ class Branch(models.Model):
     name = models.CharField(max_length=60, blank=True)
     address = models.TextField(max_length=500, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 
@@ -51,9 +54,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.full_name
 
 
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class Book(models.Model):
     author = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
-    branch_id = models.ForeignKey
-    owner_id = models.ForeignKey
-    gener = models.ForeignKey
+    branch = models.ForeignKey(Branch, null=True, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre, null=True, on_delete=models.CASCADE)

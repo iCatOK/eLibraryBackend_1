@@ -3,7 +3,7 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.utils import email_address_exists
 from rest_framework import serializers
-from api.models import User, Branch
+from api.models import User, Branch, Book, Genre
 from api.db_utils import get_branch
 
 class UserSerializer(serializers.ModelSerializer):
@@ -80,10 +80,40 @@ class RegisterSerializer(serializers.Serializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    genre = serializers.PrimaryKeyRelatedField(queryset=Genre.objects.all())
+    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
+
     class Meta:
         model = Book
-        fields = ("author",
-                  "name")
+        fields = [
+            'author', 'name', 'genre', 'owner'
+        ]
+
+        extra_kwargs = {
+            'genre': {'read_only': True},
+        }
 
     def create(self, validated_data):
         return Book.objects.create(**validated_data)
+    
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = [
+            'name',
+        ]
+
+    def create(self, validated_data):
+        return Genre.objects.create(**validated_data)
+
+
+class BranchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = [
+            'name', 'address'
+        ]
+
+    def create(self, validated_data):
+        return Branch.objects.create(**validated_data)
