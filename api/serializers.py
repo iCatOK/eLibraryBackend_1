@@ -3,7 +3,7 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.utils import email_address_exists
 from rest_framework import serializers
-from api.models import User, Branch, Book, Genre, BookTransaction
+from api.models import User, Branch, Book, Genre, BookTransaction, Order
 from api.db_utils import get_branch
 
 class UserSerializer(serializers.ModelSerializer):
@@ -16,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'status': {'read_only': True},
             'username': {'read_only': True},
+            'is_librarian': {'read_only': True},
             'id': {'read_only': True},
         }
     
@@ -65,19 +66,16 @@ class RegisterSerializer(serializers.Serializer):
         }
 
     def save(self, request):
-        # if request.user.is_authenticated and request.user.is_librarian:
-        # else:
-        #     raise serializers.ValidationError("You don't have permissions")
-        if request.user.is_authenticated:
-            if not request.user.is_librarian:
-                raise serializers.ValidationError({"error":"You don't have permissions"})
-            adapter = get_adapter()
-            user = adapter.new_user(request)
-            self.cleaned_data = self.get_cleaned_data()
-            if adapter.save_user(request, user, self) is None:
-                raise serializers.ValidationError({"error":"Branch does not exisit"})
-            user.save()
-            return user
+        # if request.user.is_authenticated:
+        #     if not request.user.is_librarian:
+        #         raise serializers.ValidationError({"error":"You don't have permissions"})
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+        if adapter.save_user(request, user, self) is None:
+            raise serializers.ValidationError({"error":"Branch does not exisit"})
+        user.save()
+        return user
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -87,11 +85,10 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = [
-            'id', 'author', 'name', 'genre', 'owner'
+            'id', 'author', 'name', 'genre', 'owner', 'branch'
         ]
 
         extra_kwargs = {
-            'genre': {'read_only': True},
             'id': {'read_only': True},
         }
 
@@ -127,7 +124,30 @@ class BranchSerializer(serializers.ModelSerializer):
         return Branch.objects.create(**validated_data)
 
 
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    date = serializers.DateTimeField()
+
+    class Meta:
+        model = Order
+        fields = [
+            'id', 'user', 'book', 'status', 'date'
+        ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        return Order.objects.create(**validated_data)
+
+
 class BookTransactionSerilizer(serializers.ModelSerializer):
+    cooperator = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    borrow_date = serializers.DateTimeField()
+    return_date = serializers.DateTimeField()
+
     class Meta:
         model = BookTransaction
         fields = [
@@ -138,3 +158,12 @@ class BookTransactionSerilizer(serializers.ModelSerializer):
             "cooperator",
             "status"
         ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'status': {'read_only': True},
+            'borrow_date': {'read_only': True},
+            'cooperator': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        return BookTransaction.objects.create(**validated_data)

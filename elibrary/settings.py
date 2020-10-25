@@ -157,6 +157,7 @@ ACCOUNT_ADAPTER = 'api.adapters.CustomUserAccountAdapter'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 EMAIL_REQUIRED = False
+#SESSION_COOKIE_HTTPONLY = False
 
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
@@ -165,3 +166,9 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'api.serializers.UserSerializer'
 }
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S", 
+}
+
+REST_SESSION_LOGIN = False

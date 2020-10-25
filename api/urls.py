@@ -25,10 +25,21 @@ genre_patterns = [
     path('<int:pk>/', views.GenreDetailView.as_view(), name='genre-detail'),
 ]
 
+order_patterns = [
+    path('', views.OrderListView.as_view(), name='order-list'),
+    path('<int:pk>/', views.OrderDetailView.as_view(), name='order-detail'),
+]
+
+librarian_patterns = [
+    path('books/', views.LibrarianBookListView.as_view(), name='librarian-book-list'),
+]
+
 
 urlpatterns = [
     path('users/', include(user_patterns)),
     path('books/', include(book_patterns)),
+    path('orders/', include(order_patterns)),
     path('branches/', include(branch_patterns)),
+    path('librarian/', include(librarian_patterns)),
     path('genres/', include(genre_patterns)),
 ]
